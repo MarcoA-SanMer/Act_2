@@ -14,19 +14,19 @@
 <body>
     <div class="nav">
         <a href="index.html">Inicio</a>
-        <a href="formulario.html">Formulario</a>
+        <a href="formulario.php">Formulario</a>
     </div>
 
     <header>
         <h1>Contacto</h1>
     </header>
 
-    <form method="get" action="formulario.html">
+    <form method="POST" action="store.php">
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre"><br>
+        <input type="text" id="nombre" name="nombre" required><br>
 
         <label for="correo">Correo:</label>
-        <input type="email" id="correo" name="correo"><br>
+        <input type="email" id="correo" name="correo" required><br>
 
         <label>Género:</label>
         <input type="radio" id="genero-masculino" name="genero" value="masculino">
@@ -35,13 +35,13 @@
         <label for="genero-femenino">Femenino</label><br>
 
         <label for="contraseña">Contraseña:</label>
-        <input type="password" id="contraseña" name="contraseña"><br>
+        <input type="password" id="contraseña" name="contrasena" required><br>
 
         <label for="comentario">Comentario:</label>
         <textarea id="comentario" name="comentario" rows="4" cols="25"></textarea><br>
 
         <label for="ciudad">Ciudad:</label>
-        <select id="ciudad" name="ciudad">
+        <select id="ciudad" name="ciudad" required>
             <option value="Guadalajara">Guadalajara</option>
             <option value="Zapopan">Zapopan</option>
             <option value="Tonalá">Tonalá</option>
@@ -53,6 +53,32 @@
 
         <button type="submit">Enviar</button>
     </form>
+
+    <form method="post">
+        <button type="submit" name="buscar">Imprimir registros</button>
+    </form>
+
+    <?php
+    
+    require('conexion.php');
+
+    if (isset($_POST['buscar'])) {
+
+        $sql = "SELECT * FROM usuarios";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // Configura los resultados como un arreglo asociativo
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        // $stmt->fetchAll() Obtiene el arreglo asociativo
+        echo "<ul>";
+        foreach ($stmt->fetchAll() as $row) {
+            echo "<li>" . $row['Id'] . " - " . $row['nombre'] . " " . $row['correo'] . " " . $row['genero'] . " " . $row['contrasena'] . " " . $row['comentario'] . " " . $row['ciudad'] . " " . $row['meinte'] ."</li>";
+        }
+        echo "</ul>";
+    }
+    ?>
 
 </body>
 </html>
